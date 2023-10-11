@@ -5,3 +5,5 @@ Startkode for programmeringsprosjekt.
 Prosjektbeskrivelsen finnes i test-prosjektet: 
 
 https://github.com/dat100hib/dat100-prosjekt-vri8-testing/blob/main/README.md
+
+Enhetstest URL: https://github.com/dat100hib/dat100-prosjekt-vri8-testing.git
