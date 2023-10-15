@@ -1,14 +1,13 @@
 package no.hvl.dat100.prosjekt.kontroll;
 
-import java.util.Random;
-
 import no.hvl.dat100.prosjekt.TODO;
 import no.hvl.dat100.prosjekt.kontroll.dommer.Regler;
 import no.hvl.dat100.prosjekt.kontroll.spill.Handling;
 import no.hvl.dat100.prosjekt.kontroll.spill.HandlingsType;
 import no.hvl.dat100.prosjekt.kontroll.spill.Spillere;
-import no.hvl.dat100.prosjekt.modell.Kort;
 import no.hvl.dat100.prosjekt.modell.KortSamling;
+import no.hvl.dat100.prosjekt.modell.Kort;
+import no.hvl.dat100.prosjekt.modell.Kortfarge;
 
 /**
  * Klasse som for å representere en vriåtter syd-spiller. Strategien er å lete
@@ -25,36 +24,24 @@ public class SydSpiller extends Spiller {
 	 */
 	public SydSpiller(Spillere spiller) {
 		super(spiller);
+		
+		
 	}
-
-	/**
-	 * Metode for å implementere strategi. Strategien er å spille det første
-	 * kortet som er lovlig (også en åtter selv om man har andre kort som også
-	 * kan spilles). Dersom man ikke har lovlige kort å spille, trekker man om
-	 * man ikke allerede har trukket maks antall ganger. I så fall sier man
-	 * forbi.
-	 * 
-	 * @param topp
-	 *            kort som ligg øverst på til-bunken.
-	 */
-
-	// TODO - START
-	/* first-fit strategi */
 	int[] playedValues = new int[52];
 	int[] playedSuits = new int[52];
 	int[] uniqueIdentifier = new int[52];
 	int uniqueIdentifierIterator = 0;
 	int iteratorPlayedCards = 0;
-	/**
-	 * Metode for å implementere strategi. Strategien er å spille det første
-	 * kortet som er lovlig (også en åtter selv om man har andre kort som også
-	 * kan spilles). Dersom man ikke har lovlige kort å spille, trekker man om
-	 * man ikke allerede har trukket maks antall ganger. I så fall sier man
-	 * forbi.
-	 * 
-	 * @param topp
-	 *            kort som ligg øverst på til-bunken.
-	 */
+
+	// Sjekker hvilken unik verdi kortet har
+	public int checkUniqueIdentifier(Kort kort) {
+		int suit = kort.getFarge().ordinal();
+		int verdi = kort.getVerdi();
+		int uniqueIdentifier = 13 * suit + verdi;
+		return uniqueIdentifier;
+	}
+
+	// Sjekker hvert av kortene om de har blitt sett før av SydSpiiller
 	public boolean checkIfScanned(Kort kort) {
 		for (int each:uniqueIdentifier) {
 			if(checkUniqueIdentifier(kort) == each) {
@@ -64,13 +51,7 @@ public class SydSpiller extends Spiller {
 		return true;
 	}
 
-	public int checkUniqueIdentifier(Kort kort) {
-		int suit = kort.getFarge().ordinal();
-		int verdi = kort.getVerdi();
-		int uniqueIdentifier = 13 * suit + verdi;
-		return uniqueIdentifier;
-	}
-
+	// Registrer at kortet har blitt sett og legger til fargen og verdien i tabellene
 	public void hasSeen(Kort kort){
 		playedValues[iteratorPlayedCards] = kort.getVerdi();
 		playedSuits[iteratorPlayedCards] = kort.getFarge().ordinal();
@@ -79,6 +60,7 @@ public class SydSpiller extends Spiller {
 		uniqueIdentifierIterator ++;
 	}
 
+	// Bruker hasSeen og checkIfScanned for å scanne alle kortene i hånden til SydSpiller
 	public void scanHand(Kort topp) {
 		for (Kort kort:this.getHand().getAllekort()) {
 			if(checkIfScanned(kort)) {
@@ -90,6 +72,7 @@ public class SydSpiller extends Spiller {
 			}
 	}
 	
+	// Gir poeng til et kort basert på hvor mange kort av samme farge/verdi SydSpiller har sett før
 	public int pointGiver(Kort kort) {
 		int points = 0;
 		int suit = kort.getFarge().ordinal();
@@ -107,6 +90,7 @@ public class SydSpiller extends Spiller {
 		return points;
 	}
 
+	// Angir pointGiver på alle kort i en tabell og velger kortet med høyest verdi
 	public Kort bestCard(Kort[] cards) {
 		Kort bestCard = cards[0];
 		for (Kort each:cards) {
@@ -119,10 +103,9 @@ public class SydSpiller extends Spiller {
 
 	@Override
 	public Handling nesteHandling(Kort topp) {
-		// Add cards in hand to memory along with top card
+		// Scanner alle kort i hånden på begynnelsen av tur
 		scanHand(topp);
-		// TODO - START
-		/* first-fit strategi */
+
 		Kort[] hand = getHand().getAllekort();
 		KortSamling lovlige = new KortSamling();
 		KortSamling attere = new KortSamling();
@@ -132,7 +115,8 @@ public class SydSpiller extends Spiller {
 			if (Regler.kanLeggeNed(k, topp)) {
 				if (Regler.atter(k)) {
 					attere.leggTil(k);
-				} else {
+				} 
+				else {
 					lovlige.leggTil(k);
 				}
 			}
@@ -143,27 +127,24 @@ public class SydSpiller extends Spiller {
 
 		if (!lovlige.erTom()) {
 			spillFra = lovlige.getAllekort();
-		} else if (!attere.erTom())  {
+		} 
+		else if (!attere.erTom())  {
 			spillFra = attere.getAllekort();
 		}
 
 		Handling handling = null;
 		
 		if (spillFra != null) {
-			
 			spill = bestCard(spillFra);
-			handling = new Handling(HandlingsType.LEGGNED, spill);
-			// setAntallTrekk(0);
-			
-		} else if (getAntallTrekk() < Regler.maksTrekk()) {
+			handling = new Handling(HandlingsType.LEGGNED, spill);	
+		} 
+		else if (getAntallTrekk() < Regler.maksTrekk()) {
 			handling = new Handling(HandlingsType.TREKK, null);
-		} else {
+		} 
+		else {
 			handling = new Handling(HandlingsType.FORBI, null);
-			// setAntallTrekk(0);
 		}
 
 		return handling;
-	
-		// TODO - END
 	}
 }
