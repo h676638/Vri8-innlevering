@@ -270,17 +270,40 @@ public class Kontroll {
 	}
 
 	public void spillAuto() {
+		int gameAmount = 5000;
+		int[] winAmount = new int[gameAmount];
+		int southWins = 0;
+		int northWins = 0;
+		for(int i = 0;i<gameAmount;i++) {	
+			this.startSpill();
+			while (!harVinner()) {
 
-		while (!harVinner()) {
+				ISpiller spiller = turSpiller();
 
-			ISpiller spiller = turSpiller();
-
-			if (spiller != null) {
-				spillSpiller(spiller);
-			} else {
-				System.out.println("Feil i spillAuto - ingen spiller aktiv");
+				if (spiller != null) {
+					spillSpiller(spiller);
+				} else {
+					System.out.println("Feil i spillAuto - ingen spiller aktiv");
+				}
+			}
+			Spillere vinner = Regler.vinner(spill.getNord(), spill.getSyd());
+			if(vinner.toString()=="SYD") {
+				winAmount[i] = 0;
+				southWins ++;
+			}
+			else{
+				winAmount[i] = 1;
+				northWins ++;
 			}
 		}
+		
+		for(int each:winAmount) {
+			System.out.println(each);
+		}
+		System.out.print("South: ");
+		System.out.println(southWins);
+		System.out.print("North: ");
+		System.out.println(northWins);
 
 	}
 }

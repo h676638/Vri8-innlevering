@@ -8,7 +8,7 @@ public abstract class Regler {
 	
 	// juster på disse for å spille med alle kort 
 	public static final int MAKS_KORT_FARGE = 3;
-	public final static int ANTALL_KORT_START = 3;
+	public final static int ANTALL_KORT_START = 6;
 	
 	private final static int MAKS_TREKK = 1;
 	
