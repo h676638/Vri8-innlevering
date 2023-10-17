@@ -21,10 +21,8 @@ public class KortSamling {
 	 * Oppretter en tom Kortsamling med plass til MAKS_KORT (hele kortstokken).
 	 */
 	public KortSamling() {
-		
-		// TODO - START
 		samling = new Kort[MAKS_KORT];
-		// TODO - END
+		antall = 0;
 	}
 
 	/**
@@ -37,9 +35,7 @@ public class KortSamling {
 	 * @return tabell av kort.
 	 */
 	public Kort[] getSamling() {
-		
 		return samling;
-		
 	}
 	
 	/**
@@ -48,12 +44,7 @@ public class KortSamling {
 	 * @return antall kort i samlinga.
 	 */
 	public int getAntalKort() {
-		
-		// TODO - START
-		
-		return getAllekort().length;
-		
-		// TODO - END
+		return antall;
 	}
 	
 	/**
@@ -62,17 +53,12 @@ public class KortSamling {
 	 * @return true om samlinga er tom, false ellers.
 	 */
 	public boolean erTom() {
-		
-		// TODO - START
-				
-		if (getAntalKort() == 0) {
+		if (antall==0) {
 			return true;
 		}
 		else {
 			return false;
 		}
-		
-		// TODO - END
 	}
 
 	/**
@@ -82,18 +68,13 @@ public class KortSamling {
 	 *            er kortet som skal leggast til.
 	 */
 	public void leggTil(Kort kort) {
-		
-		// TODO - START
-		
 		for (int i = 0;i<samling.length;i++) {
-			if (samling[i] == null) {
+			if(samling[i] == null) {
 				samling[i] = kort;
 				break;
 			}
 		}
-		
-		// TODO - END
-		
+		antall++;
 	}
 	
 	/**
@@ -101,49 +82,23 @@ public class KortSamling {
 	 * slik at de normalt må stokkes før bruk.
 	 */
 	public void leggTilAlle() {
-		
-		// TODO - START
-		// Husk: bruk Regler.MAKS_KORT_FARGE for å få antall kort per farge
-		Kortfarge kortFarge;
-		for (int j = 0;j<4;j++) {
-			switch (j) {
-			case 0:
-				kortFarge = Kortfarge.Klover;
-				break;
-			case 1: 
-				kortFarge = Kortfarge.Hjerter;
-				break;
-			case 2:
-				kortFarge = Kortfarge.Ruter;
-				break;
-			case 3:
-				kortFarge = Kortfarge.Spar;
-				break;
-			default:
-				kortFarge = Kortfarge.Spar;
-			}
-			
+		antall = 0;
+		for (Kortfarge kortFarge:Kortfarge.values()) {
 			for (int i = 1;i<=Regler.MAKS_KORT_FARGE;i++) {
 				
 				Kort x = new Kort(kortFarge,i);
-				samling[i-1 + Regler.MAKS_KORT_FARGE * j] = x;
+				samling[antall] = x;
+				antall++;
 			}
-			
 		}
-		
-		// TODO - END
 	}
 
 	/**
 	 * Fjerner alle korta fra samlinga slik at den blir tom.
 	 */
 	public void fjernAlle() {
-		
-		// TODO - START
-		for (int i = 0;i<samling.length;i++) {
-			samling[i] = null;
-		}
-		// TODO - END
+		samling = new Kort[MAKS_KORT];
+		antall = 0;
 	}
 	
 	/**
@@ -153,18 +108,10 @@ public class KortSamling {
 	 *         null.
 	 */
 	public Kort seSiste() {
-		
-		// TODO - START
-		
-		for (int i = MAKS_KORT-1;i>=0;i--) {
-			if (samling[i] != null) {
-				return samling[i];
-			}
+		if(antall==0) {
+			return null;
 		}
-		return null;
-
-		// TODO - END
-		
+		return samling[antall-1];
 	}
 
 	/**
@@ -174,19 +121,12 @@ public class KortSamling {
 	 *         null.
 	 */
 	public Kort taSiste() {
-		
-		// TODO - START
-		
-		for (int i = MAKS_KORT-1;i+1>0;i--) {
-			if (samling[i] != null) {
-				Kort sisteKort = samling[i];
-				samling[i] = null;
-				return sisteKort;
-			}
+		if (antall == 0) {
+			return null;
 		}
-		return null;
-		
-		// TODO - END
+		Kort sisteKort = getAllekort()[antall-1];
+		fjern(sisteKort);
+		return sisteKort;
 	}
 	
 	/**
@@ -197,19 +137,15 @@ public class KortSamling {
 	 * @return true om kortet finst i samlinga, false ellers.
 	 */
 	public boolean har(Kort kort) {
-		
-		// TODO - START
-		if (kort != null) {
-			for (int i = 0;i<getAntalKort();i++) {
-				if (getAllekort()[i].getFarge() == kort.getFarge() && getAllekort()[i].getVerdi() == kort.getVerdi()) {
+		if (kort == null) {
+			return false;
+		}
+		for (Kort curKort:getAllekort()) {
+				if(curKort.lik(kort)) {
 					return true;
 				}
-		
-			}
 		}
 		return false;
-		// TODO - END
-		
 	}
 
 	/**
@@ -223,19 +159,16 @@ public class KortSamling {
 	 */
 			 
 	public boolean fjern(Kort kort) {
-		
-		// TODO - START
-		if (kort != null) {
+		if(kort != null) {
 			for (int i = 0;i<samling.length;i++) {
-				if (samling[i] == kort) {
+				if(samling[i] == kort) {
 					samling[i] = null;
+					antall--;
 					return true;
 				}
 			}
-		}
+		}		
 		return false;
-
-		// TODO - END
 	}
 
 	/**
@@ -245,26 +178,20 @@ public class KortSamling {
 	 *         som i kortsamlinga.
 	 */
 	public Kort[] getAllekort() {
-		
-		// TODO - START
-		int mengderKort = 0;
-		for (Kort kort:samling) {
-			if(kort != null) {
-				mengderKort++;
+		int i = 0;
+		Kort[] alleKort = new Kort[antall];
+		for(Kort each:samling) {
+			if(each != null) {
+				alleKort[i] = each;
+				i++;
 			}
 		}
-		int j = 0;
-		Kort[] alleKort = new Kort[mengderKort];
-		for (int i = 0;i<samling.length;i++) {
-			if (samling[i] != null) {
-				alleKort[j] = samling[i];
-				j++;
-			}
+		if (alleKort[antall-1] == null){
+			int test = 0;
 		}
-		// TODO - END
 		return alleKort;
-	
 	}
+		
 	/**
 	 * Retunerer maks antall kort
 	 * @return MAKS_KORT

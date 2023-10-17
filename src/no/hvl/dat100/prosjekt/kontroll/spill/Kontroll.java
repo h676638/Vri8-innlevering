@@ -270,7 +270,7 @@ public class Kontroll {
 	}
 
 	public void spillAuto() {
-		int gameAmount = 5000;
+		int gameAmount = 1000;
 		int[] winAmount = new int[gameAmount];
 		int southWins = 0;
 		int northWins = 0;

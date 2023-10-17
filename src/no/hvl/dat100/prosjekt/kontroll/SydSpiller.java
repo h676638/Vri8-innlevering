@@ -24,8 +24,6 @@ public class SydSpiller extends Spiller {
 	 */
 	public SydSpiller(Spillere spiller) {
 		super(spiller);
-		
-		
 	}
 	int[] playedValues = new int[52];
 	int[] playedSuits = new int[52];
@@ -63,6 +61,10 @@ public class SydSpiller extends Spiller {
 	// Bruker hasSeen og checkIfScanned for å scanne alle kortene i hånden til SydSpiller
 	public void scanHand(Kort topp) {
 		for (Kort kort:this.getHand().getAllekort()) {
+			if(kort==null) {
+				Kort[] test = this.getHand().getAllekort();
+				int x = 0;
+			}
 			if(checkIfScanned(kort)) {
 				hasSeen(kort);
 			}

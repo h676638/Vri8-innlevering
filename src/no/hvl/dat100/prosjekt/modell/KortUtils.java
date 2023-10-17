@@ -16,31 +16,24 @@ public class KortUtils {
 	 */
 	
 	public static void sorter(KortSamling samling) {
-		
-		// TODO - START
-		Kort[] tempSamling = new Kort[samling.getAntalKort()];
 		boolean flagg = true;
-		for (int i = 0;i<samling.getAntalKort();i++) {
-			tempSamling[i] = samling.getAllekort()[i];
-					
-		}
-		while (flagg) {
+		while(flagg) {
 			flagg = false;
-			for (int i = 1;i<samling.getAntalKort();i++) {
-				if (tempSamling[i-1].compareTo(tempSamling[i]) > 0) {
-					Kort x = tempSamling[i-1];
-					Kort y = tempSamling[i];
-					tempSamling[i-1] = y;
-					tempSamling[i] = x;
-					flagg = true;
+			Kort[] sam = samling.getSamling();
+			for (int i = 1;i<sam.length;i++) {
+				if (sam[i-1] != null && sam[i] != null) {
+					if(sam[i-1].compareTo(sam[i]) > 0) {
+						Kort tempCard = sam[i-1];
+						sam[i-1] = sam[i];
+						sam[i] = tempCard;
+						flagg = true;
+					}
 				}
 			}
+			if (flagg == false) {
+				break;
+			}
 		}
-		samling.fjernAlle();
-		for (int i = 0;i<tempSamling.length;i++) {
-			samling.leggTil(tempSamling[i]);
-		}
-		// TODO - END
 	}
 	
 	/**
@@ -50,8 +43,6 @@ public class KortUtils {
 	 * 			samling av kort som skal stokkes. 
 	 */
 	public static void stokk(KortSamling samling) {
-		
-		// TODO - START
 		Random rand = new Random();
 		for (int i = 0;i<samling.getSamling().length;i++) {
 			int randInt = rand.nextInt(samling.getSamling().length);
@@ -60,7 +51,6 @@ public class KortUtils {
 			samling.getSamling()[i] = y;
 			samling.getSamling()[randInt] = x;
 		}
-		// TODO - END
 	}
 	
 }

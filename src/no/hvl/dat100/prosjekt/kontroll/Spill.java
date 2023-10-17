@@ -28,15 +28,9 @@ public class Spill {
 	public final static int ANTALL_KORT_START = Regler.ANTALL_KORT_START;
 	
 	public Spill() {
-		
-		// TODO - START
-		
 		nord = new NordSpiller(Spillere.NORD);
 		syd = new SydSpiller(Spillere.SYD);
 		bord = new Bord();
-		
-		// TODO - END
-		
 	}
 	
 	/**
@@ -45,13 +39,7 @@ public class Spill {
 	 * @return referanse/peker bord objekt.
 	 */
 	public Bord getBord() {
-		
-		// TODO - START
-		
 		return bord;
-
-		// TODO - END
-		
 	}
 	
 	/**
@@ -60,13 +48,7 @@ public class Spill {
 	 * @return referanse/peker til syd spiller.
 	 */
 	public ISpiller getSyd() {
-		
-		// TODO - START
-		
 		return syd;
-
-		// TODO - END
-		
 	}
 
 	/**
@@ -75,12 +57,7 @@ public class Spill {
 	 * @return referanse/peker til nord.
 	 */
 	public ISpiller getNord() {
-		
-		// TODO - START
-
 		return nord;
-
-		// TODO - END
 	}
 
 	/**
@@ -93,15 +70,10 @@ public class Spill {
 	 * av en klasse laget av gruppen (implementeres i oppgave 3).
 	 */
 	public void start() {
-		
-		// TODO - START
-		
 		KortUtils.stokk(bord.getBunkeFra());
 		delutKort();
 		Kort x = bord.taOversteFraBunke();
 		bord.getBunkeTil().leggTil(x);
-		
-		// TODO - END
 	}
 
 	/**
@@ -109,16 +81,10 @@ public class Spill {
 	 * 
 	 */
 	private void delutKort() {
-
-		// TODO - START
-		
-		int x = ANTALL_KORT_START;
 		for (int i = 0;i<ANTALL_KORT_START;i++) {
 			syd.leggTilKort(bord.taOversteFraBunke());
 			nord.leggTilKort(bord.taOversteFraBunke());
 		}
-		
-		// TODO - END
 	}
 
 	/**
@@ -132,19 +98,12 @@ public class Spill {
 	 * @return kortet som trekkes.
 	 */
 	public Kort trekkFraBunke(ISpiller spiller) {
-
-		// TODO - START
-			
 		if (bord.bunkefraTom()) {
 			bord.snuTilBunken();
 		}
 		Kort oversteKort = bord.taOversteFraBunke();
-		spiller.leggTilKort(oversteKort);
-		int antallTrekk = spiller.getAntallTrekk() + 1;
-		spiller.setAntallTrekk(antallTrekk);
+		spiller.trekker(oversteKort);
 		return oversteKort;
-
-		// TODO - END
 	}
 
 	/**
@@ -156,14 +115,7 @@ public class Spill {
 	 * @return handlingen som skal utføres av kontroll delen.
 	 */
 	public Handling nesteHandling(ISpiller spiller) {
-		
-		// TODO - START
-		// Hint: se på hvilke metoder som er tilgjengelig på en spiller
-		
 		return spiller.nesteHandling(bord.seOversteBunkeTil());
-
-		// TODO - END
-		
 	}
 
 	/**
@@ -179,9 +131,6 @@ public class Spill {
 	 * @return true dersom spilleren har kortet, false ellers.
 	 */
 	public boolean leggnedKort(ISpiller spiller, Kort kort) {
-		
-		// TODO - START
-		
 		if (spiller.getHand().har(kort) == false) {
 			return false;
 		}
@@ -189,8 +138,6 @@ public class Spill {
 		bord.leggNedBunkeTil(kort);
 		spiller.setAntallTrekk(0);
 		return true;
-
-		// TODO - END
 	}
 
 	/**
@@ -201,12 +148,7 @@ public class Spill {
 	 *            spilleren som er i tur.
 	 */
 	public void forbiSpiller(ISpiller spiller) {
-		
-		// TODO - START
-		
 		spiller.setAntallTrekk(0);
-	
-		// TODO - END
 	}
 
 	/**
@@ -221,26 +163,22 @@ public class Spill {
 	 * @return kort som trekkes, kort som spilles eller null ved forbi.
 	 */
 	public Kort utforHandling(ISpiller spiller, Handling handling) {
-
-		// TODO - START
 		Kort kort = null;
-
-		// Hint: del opp i de tre mulige handlinger og vurder 
-		// om noen andre private metoder i klassen kan brukes
-		// til å implementere denne metoden
-				
-		if (handling.getType() == HandlingsType.FORBI) {
+		switch(handling.getType()) {
+		case FORBI: 
 			forbiSpiller(spiller);
-		}
-		else if (handling.getType() == HandlingsType.LEGGNED) {
+			break;
+		case LEGGNED:
 			kort = handling.getKort();
 			leggnedKort(spiller, kort);
-		}
-		else if (handling.getType() == HandlingsType.TREKK) {
+			break;
+		case TREKK:
 			kort = trekkFraBunke(spiller);
+			break;
+		default:
+			return null;
 		}
 		return kort;
-		// TODO - END
 	}
 
 }
